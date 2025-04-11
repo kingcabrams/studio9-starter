@@ -27,13 +27,16 @@
                     Log Out
                 </button>
                 <form @submit.prevent="sendMessage($graffitiSession.value)">
-                    <input
-                        type="text"
-                        v-model="myMessage"
-                        placeholder="Message"
-                    />
-                    <input type="submit" value="Send" />
-                    <img class="loading" src="./img/loader.svg" height="15" width="20" style = "display: none;">
+                    <fieldset :disabled="isSending">
+                        <input
+                            type="text"
+                            v-model="myMessage"
+                            placeholder="Message"
+                        />
+                        <input type="submit" value="Send" />
+                        <img class="loading" src="./img/loader.svg" height="15" width="20" style = "display: none;">
+                    </fieldset>
+                    
                 </form>
             </template>
 

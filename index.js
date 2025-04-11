@@ -11,17 +11,20 @@ createApp({
       myMessage: "",
       sentMessageObjects: [],
       messageObjects: [],
+      isSending: false
     };
   },
 
   methods: {
     async sendMessage(session) {
         if (this.myMessage.length) {
+            this.isSending = true;
             const promise =  new Promise((resolve) => setTimeout(resolve, 1000));
             var svg = document.querySelector(".loading") 
             svg.style.display = "inline"
 
             await promise.then(() => {
+                this.isSending = false;
                 svg.style.display = "none"
             })
 
