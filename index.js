@@ -16,13 +16,20 @@ createApp({
 
   methods: {
     sendMessage(session) {
-      this.sentMessageObjects.push({
-        value: {
-          content: this.myMessage,
-          published: Date.now(),
-        },
-        channels,
-      });
+        if (this.myMessage.length) {
+            this.sentMessageObjects.push({
+                value: {
+                    content: this.myMessage,
+                    published: Date.now(),
+                },
+                channels,
+            });
+
+            this.myMessage = "";
+            this.getMessages()
+        } else {
+            console.log("Must include a message")
+        }
     },
 
     getMessages() {
