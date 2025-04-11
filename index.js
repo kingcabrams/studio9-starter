@@ -23,48 +23,53 @@ createApp({
             var svg = document.querySelector(".loading") 
             svg.style.display = "inline"
 
-            await promise.then(() => {
+            promise.then(() => {
                 this.isSending = false;
                 svg.style.display = "none"
             })
 
-            this.sentMessageObjects.push({
-                value: {
-                    content: this.myMessage,
-                    published: Date.now(),
+            await this.$graffiti.put(
+                {
+                    value: {
+                        content: this.myMessage,
+                        published: Date.now(),
+                    },
+                    channels,
                 },
-                channels,
-            });
+                session,
+            );
 
             this.myMessage = "";
             this.getMessages()
+
         } else {
             console.log("Must include a message")
         }
     },
 
-    getMessages() {
-      const messageObjectsIterator = this.getMessageObjectsIterator();
-
+    async getMessages() {
       const newMessageObjects = [];
-      for (const { object } of messageObjectsIterator) {
-        newMessageObjects.push(object);
-      }
-
+        const messageObjectsIterator = this.$graffiti.discover(channels, {
+            value: {
+                properties: {
+                    content: { type: "string" },
+                    published: { type: "number" },
+                },
+            },
+        });
+        for await (const { object } of messageObjectsIterator) {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            newMessageObjects.push(object);
+        }
       // Sort here
 
       this.messageObjects = newMessageObjects;
     },
 
-    *getMessageObjectsIterator() {
-      for (const object of this.sentMessageObjects) {
-        yield { object };
-      }
-    },
   },
 })
   .use(GraffitiPlugin, {
-    graffiti: new GraffitiLocal(),
-    // graffiti: new GraffitiRemote(),
+    // graffiti: new GraffitiLocal(),
+    graffiti: new GraffitiRemote(),
   })
   .mount("#app");
