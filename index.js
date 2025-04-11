@@ -15,8 +15,10 @@ createApp({
   },
 
   methods: {
-    sendMessage(session) {
+    async sendMessage(session) {
         if (this.myMessage.length) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+
             this.sentMessageObjects.push({
                 value: {
                     content: this.myMessage,
