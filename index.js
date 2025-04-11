@@ -17,7 +17,13 @@ createApp({
   methods: {
     async sendMessage(session) {
         if (this.myMessage.length) {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
+            const promise =  new Promise((resolve) => setTimeout(resolve, 1000));
+            var svg = document.querySelector(".loading") 
+            svg.style.display = "inline"
+
+            await promise.then(() => {
+                svg.style.display = "none"
+            })
 
             this.sentMessageObjects.push({
                 value: {
